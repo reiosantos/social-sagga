@@ -96,6 +96,9 @@ class _LoginData {
 
 class AuthCard extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  final textKey1;
+  final textKey2;
+
   static const _width = 120.0;
   static const _height = 40.0;
   static const _loadingCircleThickness = 4.0;
@@ -105,7 +108,7 @@ class AuthCard extends StatelessWidget {
 
   final Function setLoggedIn;
 
-  AuthCard({this.setLoggedIn});
+  AuthCard({this.setLoggedIn, this.textKey1, this.textKey2});
 
   _save(bool value, context) async {
 //    final prefs = await SharedPreferences.getInstance();
@@ -114,22 +117,18 @@ class AuthCard extends StatelessWidget {
       final bool result = await channel
           .invokeMethod('saveSharedPreference', {SHARED_LOGIN_KEY: value});
 
-      setLoggedIn(result);
       debugPrint('Result: $result ');
-    } on PlatformException catch (e) {
-      debugPrint("Error: '${e.message}'.");
-    }
 
-    try {
-      final int result = await channel
+      final int results = await channel
           .invokeMethod('incrementLoggedInCount', {'number': _data.email});
 
-      debugPrint('Result Count: $result ');
+      debugPrint('Result Count: $results ');
 
+      setLoggedIn(result);
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MainPage(count: result)));
+          MaterialPageRoute(builder: (context) => MainPage(count: results)));
     } on PlatformException catch (e) {
-      debugPrint("Error Count: '${e.message}'.");
+      debugPrint("Error: '${e.message}'.");
     }
   }
 
@@ -164,6 +163,7 @@ class AuthCard extends StatelessWidget {
                 ),
                 width: cardWidth,
                 child: Column(
+                  key: textKey1,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     TextFormField(
@@ -182,6 +182,7 @@ class AuthCard extends StatelessWidget {
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      key: textKey2,
                       onSaved: (value) => _data.password = value,
                       validator: (value) {
                         if (value.length < 1) {
@@ -239,6 +240,9 @@ class LoginScn extends StatefulWidget {
 class _LoginScn extends State<LoginScn> {
   bool isLoggedIn = false;
   static const channel = const MethodChannel(CHANNEL);
+
+  final _textKey1 = GlobalKey(debugLabel: 'textKey1');
+  final _textKey2 = GlobalKey(debugLabel: 'textKey2');
 
   _isLoggedIn() async {
     try {
@@ -340,7 +344,11 @@ class _LoginScn extends State<LoginScn> {
                       ],
                     ),
                   ),
-                  AuthCard(setLoggedIn: setLoggedIn),
+                  AuthCard(
+                    setLoggedIn: setLoggedIn,
+                    textKey1: _textKey1,
+                    textKey2: _textKey2,
+                  ),
                 ],
               ),
             ),

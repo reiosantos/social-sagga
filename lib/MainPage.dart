@@ -165,7 +165,7 @@ class MainPage extends StatelessWidget {
                     ),
                     FittedBox(
                       child: FloatingActionButton(
-                        onPressed: _openApp(MESSENGER),
+                        onPressed: _openApp(TELEGRAM),
                         heroTag: 'Telegram',
                         tooltip: 'Telegram',
                         backgroundColor: Colors.transparent,
