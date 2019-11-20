@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:social_sagga/Question.dart';
+import 'package:social_sagga/YouWon.dart';
 import 'package:social_sagga/constants.dart';
 
 class MainPage extends StatelessWidget {
@@ -21,10 +22,18 @@ class MainPage extends StatelessWidget {
 
   MainPage({this.count});
 
-  void _afterBuild(_) {
-    if (count >= 10) {
-      //You won
-    }
+  Function _afterBuild(context) {
+    return (_) {
+      if (count >= 1) {
+        print('you => WON');
+        Navigator.of(context).push(YouWon());
+        //You won
+//        showDialog(
+//          context: context,
+//          builder: (BuildContext context1) => YouWon(),
+//        );
+      }
+    };
   }
 
   _openApp(String method) {
@@ -53,7 +62,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback(_afterBuild);
+    WidgetsBinding.instance.addPostFrameCallback(_afterBuild(context));
 
     Timer.periodic(Duration(minutes: TIMER_PERIOD), (timer) {
       if (isDialogOpen == false) {
