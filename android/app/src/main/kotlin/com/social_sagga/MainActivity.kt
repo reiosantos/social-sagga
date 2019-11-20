@@ -75,11 +75,10 @@ class MainActivity: FlutterActivity() {
                     val editor: SharedPreferences.Editor = sharedPreferences.edit()
                     editor.putInt("loggedInCount-$number", ed)
 
-                    editor.apply()
-
-                    if (ed >= 10) {
-                        editor.putInt("loggedInCount-$number", 1)
+                    if (ed >= 5) {
+                        editor.putInt("loggedInCount-$number", 0)
                     }
+                    editor.apply()
                     result.success(ed)
                 }
             }
