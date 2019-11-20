@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Question extends StatefulWidget {
@@ -24,12 +26,65 @@ class _Question extends State<Question> {
     onDialogStatusChange(false);
   }
 
-  bool museveni = false;
-  bool bobi = false;
-  bool besigye = false;
+  Map<String, bool> bools = {
+    "0": false,
+    "1": false,
+    "2": false,
+    "3": false,
+    "4": false
+  };
+
+  static List<String> questions = [
+    "What is the color of NRM?",
+    "What do you pick of this government?",
+    "How would you describe Museveni? ",
+    "What has this government done better this year?",
+    "Where do you think we can Improve?"
+  ];
+
+  List<List<String>> answers = [
+    ["Red", "Yellow", "white"],
+    ["People Centered", "Just", "Non Corrupt"],
+    ["Father", "Excellent Leader", "Living Example", "Intelligent"],
+    ["Roads/Infrastructure", "Wealth Creation", "Health Services"],
+    ["Public Service", "Judicial Matters"],
+  ];
+
+  static String getQuestion() {
+    return questions[Random.secure().nextInt(5)];
+  }
+
+  List<String> getAnswers(index) {
+    return answers[index];
+  }
+
+  Widget checkbox(String title, int idx) {
+    bool v = bools[idx.toString()];
+//    if (v == null) {
+//      v = false;
+//    }
+    return Row(
+      children: <Widget>[
+        Checkbox(
+          value: v,
+          onChanged: (bool value) {
+            setState(() {
+              bools[idx.toString()] = value;
+            });
+          },
+        ),
+        Text(title),
+      ],
+    );
+  }
+
+  String question = getQuestion();
 
   @override
   Widget build(BuildContext context) {
+    int idx = questions.indexOf(question);
+    List<String> answers = getAnswers(idx);
+
     return WillPopScope(
       onWillPop: () {},
       child: AlertDialog(
@@ -38,7 +93,7 @@ class _Question extends State<Question> {
           key: _formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.all(8.0),
@@ -46,48 +101,20 @@ class _Question extends State<Question> {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Text(
-                      "who do you think will win the 2021 elections?",
+                      "$question",
                       style: TextStyle(color: Colors.black, fontSize: 15.0),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: museveni,
-                          onChanged: (bool value) {
-                            setState(() {
-                              museveni = value;
-                            });
-                          },
-                        ),
-                        Text('Museveni')
-                      ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 4,
+                      width: MediaQuery.of(context).size.width,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: answers.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return checkbox(answers[index], index);
+                        },
+                      ),
                     ),
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: bobi,
-                          onChanged: (bool value) {
-                            setState(() {
-                              bobi = value;
-                            });
-                          },
-                        ),
-                        Text('Robert Kyagulanyi'),
-                      ],
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                          value: besigye,
-                          onChanged: (bool value) {
-                            setState(() {
-                              besigye = value;
-                            });
-                          },
-                        ),
-                        Text('Besigye'),
-                      ],
-                    )
                   ],
                 ),
               ),

@@ -24,7 +24,7 @@ class MainPage extends StatelessWidget {
 
   Function _afterBuild(context) {
     return (_) {
-      if (count >= 1) {
+      if (count >= 5) {
         print('you => WON');
         Navigator.of(context).push(YouWon());
         //You won
