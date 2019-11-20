@@ -1,13 +1,11 @@
 package com.social_sagga
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.net.Uri
 import android.widget.Toast
 
 
@@ -89,69 +87,81 @@ class MainActivity: FlutterActivity() {
     }
 
     fun openWhatsApp(): Boolean {
-        val url = "https://api.whatsapp.com/send?phone=%s"
-        val whatsappIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        whatsappIntent.setPackage("com.whatsapp")
-        whatsappIntent.data = Uri.parse(String.format(url, "+256779104144"))
-
-        whatsappIntent.flags = FLAG_ACTIVITY_NEW_TASK
         try {
-            startActivity(whatsappIntent)
+            val intent = packageManager.getLaunchIntentForPackage("com.whatsapp")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         } catch (ex: android.content.ActivityNotFoundException) {
             Toast.makeText(this, "Please install whatsApp", Toast.LENGTH_LONG).show()
             return false
         }
-
-//        val sendIntent = Intent("android.intent.action.MAIN")
-//        sendIntent.component = ComponentName("com.whatsapp", "com.whatsapp.Conversation")
-//        sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators("0706732381") + "@s.whatsapp.net")
-//
-//        startActivity(Intent.createChooser(sendIntent, "Compartir en")
-//                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
         return true
     }
 
     fun openFacebook(): Boolean {
-        val url = "https://www.facebook.com/"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        intent.flags = FLAG_ACTIVITY_NEW_TASK
         try {
+            val intent = packageManager.getLaunchIntentForPackage("com.facebook.katana")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-        } catch (ex: android.content.ActivityNotFoundException) {
-            Toast.makeText(this, "Please install Facebook", Toast.LENGTH_LONG).show()
-            return false
+        } catch (ex: Exception) {
+            try{
+                val intent = packageManager.getLaunchIntentForPackage("com.facebook.lite")
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Please install Facebook", Toast.LENGTH_LONG).show()
+                return false
+            }
         }
         return true
     }
 
     fun openMessenger(): Boolean {
-        val url = "fb://messaging/"
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        intent.data = Uri.parse(url)
-        intent.setPackage("com.facebook.orca")
-        intent.flags = FLAG_ACTIVITY_NEW_TASK
         try {
+            val intent = packageManager.getLaunchIntentForPackage("com.facebook.orca")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
-        } catch (ex: android.content.ActivityNotFoundException) {
-            Toast.makeText(this, "Please install Facebook", Toast.LENGTH_LONG).show()
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Please install Facebook Messenger", Toast.LENGTH_LONG).show()
             return false
         }
         return true
     }
 
     fun openTwitter(): Boolean{
-        Toast.makeText(this, "Please install Twitter", Toast.LENGTH_LONG).show()
-        return false
+        try {
+            val intent = packageManager.getLaunchIntentForPackage("com.twitter.android")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Please install Twitter", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     fun openInstagram(): Boolean{
-        Toast.makeText(this, "Please install Instagram", Toast.LENGTH_LONG).show()
-        return false
+        try {
+            val intent = packageManager.getLaunchIntentForPackage("com.instagram.android")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Please install Instagram", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     fun openTelegram(): Boolean{
-        Toast.makeText(this, "Please install Telegram", Toast.LENGTH_LONG).show()
-        return false
+        try {
+            val intent = packageManager.getLaunchIntentForPackage("org.telegram.messenger")
+            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        } catch (ex: Exception) {
+            Toast.makeText(this, "Please install Telegram", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     fun saveSharedPreference(value: Boolean): Boolean {
