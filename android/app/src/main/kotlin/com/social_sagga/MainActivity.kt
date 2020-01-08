@@ -11,6 +11,7 @@ import android.widget.Toast
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter.native/helper"
+    private val WIN_COUNT = 2
 //    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
 //        GeneratedPluginRegistrant.registerWith(flutterEngine)
 //    }
@@ -75,7 +76,7 @@ class MainActivity: FlutterActivity() {
                     val editor: SharedPreferences.Editor = sharedPreferences.edit()
                     editor.putInt("loggedInCount-$number", ed)
 
-                    if (ed >= 5) {
+                    if (ed >= WIN_COUNT) {
                         editor.putInt("loggedInCount-$number", 0)
                     }
                     editor.apply()
