@@ -178,12 +178,12 @@ class MainPage extends StatelessWidget {
 
   Widget _buildVideoList() {
     final videoUrls = [
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
-      'http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
-      'http://robots.stanford.edu/movies/Map4b.avi',
-      'http://robots.stanford.edu/movies/incremental-em-texture.avi',
-//      'lib/assets/videos/butterfly.mp4',
-//      'lib/assets/videos/big_buck_bunny.mp4',
+//      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4',
+//      'http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
+//      'http://robots.stanford.edu/movies/Map4b.avi',
+//      'http://robots.stanford.edu/movies/incremental-em-texture.avi',
+      'lib/assets/videos/butterfly.mp4',
+      'lib/assets/videos/big_buck_bunny.mp4',
     ];
 
     return ListView.separated(

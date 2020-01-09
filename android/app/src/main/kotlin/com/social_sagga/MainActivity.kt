@@ -3,24 +3,32 @@ package com.social_sagga
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.widget.Toast
+import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.BinaryMessenger
+import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugins.videoplayer.VideoPlayerPlugin
 
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter.native/helper"
     private val WIN_COUNT = 2
-//    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-//        GeneratedPluginRegistrant.registerWith(flutterEngine)
-//    }
+
+    override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+//        flutterEngine.plugins.add(VideoPlayerPlugin())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        GeneratedPluginRegistrant.registerWith(this)
 
-        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { methodCall, result ->
+        val binaryMessenger: BinaryMessenger = flutterEngine!!.dartExecutor.binaryMessenger
+
+        MethodChannel(binaryMessenger, CHANNEL).setMethodCallHandler { methodCall, result ->
 //            val args = methodCall.arguments as List<*>
 
             val sharedPreferences: SharedPreferences = getSharedPreferences("social-saga", Context.MODE_PRIVATE)

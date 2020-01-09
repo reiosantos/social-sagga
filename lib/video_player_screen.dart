@@ -14,28 +14,57 @@ class VideoPlayerScreen extends StatefulWidget {
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   VideoPlayerController _controller;
   Future<void> _initializeVideoPlayerFuture;
+  bool isPlaying = false;
 
   @override
   void initState() {
 
-    _controller = VideoPlayerController.network(widget.dataSource);
+    _controller = VideoPlayerController.asset(widget.dataSource);
+    _controller.addListener(checkVideo);
 
     _initializeVideoPlayerFuture = _controller.initialize();
 
 //    _initializeVideoPlayerFuture.then((_) { setState(() {}); });
-    _controller.setLooping(true);
+//    _controller.setLooping(true);
+    isPlaying = false;
     super.initState();
+  }
+
+  void checkVideo() {
+    // Implement your calls inside these conditions' bodies :
+    if (_controller.value.position ==
+        Duration(seconds: 0, minutes: 0, hours: 0)) {
+      print('video Started');
+    }
+
+    if (_controller.value.position == _controller.value.duration) {
+      print('video Ended');
+
+      setState(() {
+        isPlaying = false;
+      });
+    }
   }
 
   @override
   void dispose() {
+    _controller.removeListener(checkVideo);
     _controller.dispose();
     super.dispose();
   }
 
+  @override
+  void deactivate() {
+    _controller.setVolume(0.0);
+    super.deactivate();
+  }
+
   Widget _buildVideoInitialized() {
+    double aspr = _controller.value.aspectRatio;
+    aspr = aspr > 0.0 ? aspr : 1280/720;
+
     return AspectRatio(
-        aspectRatio: _controller.value.aspectRatio,
+        aspectRatio: aspr,
         child: Column(
           children: <Widget>[
             VideoPlayer(_controller),
@@ -78,10 +107,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       future: _initializeVideoPlayerFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done) {
+          double aspr = _controller.value.aspectRatio;
+          aspr = aspr > 0.0 ? aspr : 1280/720;
+
           return Column(
             children: <Widget>[
               AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
+                  aspectRatio: aspr,
                   child: VideoPlayer(_controller)
               ),
               IconButton(
@@ -92,9 +124,22 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   ),
                   onPressed: () {
                     setState(() {
-                      _controller.value.isPlaying
-                          ? _controller.pause()
-                          : _controller.play();
+                      if (_controller.value.isPlaying) {
+                        _controller.setVolume(0.0);
+                        _controller.pause();
+                        setState(() {
+                          isPlaying = false;
+                        });
+                      }  else {
+                        if (_controller.value.position == _controller.value.duration) {
+                          _controller.seekTo(Duration.zero);
+                        }
+                        _controller.setVolume(1.0);
+                        _controller.play();
+                        setState(() {
+                          isPlaying = true;
+                        });
+                      }
                     });
                   })
             ],
