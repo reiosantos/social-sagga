@@ -182,8 +182,11 @@ class MainPage extends StatelessWidget {
 //      'http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4',
 //      'http://robots.stanford.edu/movies/Map4b.avi',
 //      'http://robots.stanford.edu/movies/incremental-em-texture.avi',
-      'lib/assets/videos/butterfly.mp4',
-      'lib/assets/videos/big_buck_bunny.mp4',
+//      'lib/assets/videos/butterfly.mp4',
+//      'lib/assets/videos/big_buck_bunny.mp4',
+      'lib/assets/videos/tubonga_nawe.mkv',
+      'lib/assets/videos/comedy.mkv',
+      'lib/assets/videos/kwezi_kwezi.mkv',
     ];
 
     return ListView.separated(
